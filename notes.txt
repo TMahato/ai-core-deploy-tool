@@ -1,0 +1,44 @@
+1. 
+
+What process.exit(0) Does
+
+process.exit(0) forcibly ends the Node.js process and returns an exit code (0 = success).
+
+Think of it as saying:
+
+“I’m done — stop everything now, clean up, and exit successfully.”
+
+🧠 Why You Need It Here
+
+In your script:
+
+await openNewTerminalAndRunCommand();
+process.exit(0);
+
+
+You’re calling asynchronous functions (inquirer.prompt, spawn, readline) that:
+
+Open new subprocesses (terminal),
+
+Create event listeners (rl.question, terminalProcess.on('error')),
+
+Keep Node's event loop active even after your main logic completes.
+
+Normally, Node.js will automatically exit when the event loop is empty —
+but if any of the following remain open:
+
+a readline interface,
+
+a pending stdin listener,
+
+a spawned detached process with an unreferenced handle,
+
+or even a timer or promise waiting,
+
+then Node.js stays alive indefinitely.
+
+✅ So by calling process.exit(0), you’re saying:
+
+“Ignore any leftover async listeners — just exit cleanly when my main workflow is done.”
+
+2. 
