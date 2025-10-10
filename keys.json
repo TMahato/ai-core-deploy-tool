@@ -1,0 +1,11 @@
+{
+    "clientid": "sb-34b38461-e9c6-41ec-8ce3-25322f2c6e4c!b197806|aicore!b540",
+    "clientsecret": "f737278f-d8fa-45ce-b42c-79ad78cf6b35$26jEElkULk9UKoSs2WlhTBHVI3YAzPzeEpIbHPgKcLU=",
+    "url": "https://incture-cherrywork-dev.authentication.eu10.hana.ondemand.com",
+    "identityzone": "incture-cherrywork-dev",
+    "identityzoneid": "d334a167-cac0-4902-b17c-ce06d6780e05",
+    "appname": "34b38461-e9c6-41ec-8ce3-25322f2c6e4c!b197806|aicore!b540",
+    "serviceurls": {
+        "AI_API_URL": "https://api.ai.prod.eu-central-1.aws.ml.hana.ondemand.com"
+    }
+}

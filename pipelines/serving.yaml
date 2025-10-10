@@ -1,0 +1,44 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: demo-aicore-anomaly-serving
+  annotations:
+    scenarios.ai.sap.com/name: "Demo Aicore Anomaly Detection Scenario"
+    scenarios.ai.sap.com/description: "Pipeline for anomaly detection"
+
+    executables.ai.sap.com/name: "demo-aicoreanomalymodelserving"
+    executables.ai.sap.com/description: "Serving endpoint for anomaly detection model"
+
+    artifacts.ai.sap.com/anomalymodel.kind: "model"
+  labels:
+    scenarios.ai.sap.com/id: "demo-aicore-anomaly"
+    ai.sap.com/version: "1.0"
+spec:
+  # inputs:
+  #   artifacts:
+  #     - name: anomalymodel
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: |
+        autoscaling.knative.dev/metric: concurrency
+        autoscaling.knative.dev/target: 1
+        autoscaling.knative.dev/targetBurstCapacity: 0
+      labels: |
+        ai.sap.com/resourcePlan: starter
+    spec: |
+      predictor:
+        imagePullSecrets:
+          - name: docker-registry-secret
+        minReplicas: 1
+        maxReplicas: 3
+        containers:
+          - name: kserve-container
+            image: docker.io/tanmay471/demo_serve:01
+            ports:
+              - containerPort: 9001
+                protocol: TCP
+            command: ["/bin/sh", "-c"]
+            args:
+              - >
+                set -e && echo "Starting" && gunicorn --chdir /app main:app -b 0.0.0.0:9001
