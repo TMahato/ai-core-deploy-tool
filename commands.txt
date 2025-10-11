@@ -1,2 +1,4 @@
 docker build -t docker.io/tanmay471/anamoly_train:01 .
 docker push docker.io/tanmay471/anamoly_train:01
+
+aicore configure -k "keys.json"

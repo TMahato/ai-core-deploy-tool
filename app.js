@@ -3,11 +3,12 @@
 import inquirer from "inquirer";
 import axios from "axios";
 import { openNewTerminalAndRunCommand } from "./src/terminalService.js";
+import { updateYaml } from "./src/updateYaml.js"
 
 // Define your API endpoints
 const queries = [
     "build-docker",
-    "update-yamls",
+    "update-yaml",
     "create configuration & trigger executions",
     "show execution details and logs"
 ];
@@ -31,6 +32,9 @@ async function main() {
 
     if(selectedApi === "build-docker") {
       await openNewTerminalAndRunCommand();
+    }
+    if(selectedApi === "update-yaml") {
+      await updateYaml();
     }
 
     process.exit(0);
