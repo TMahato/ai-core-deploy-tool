@@ -1,8 +1,11 @@
-import inquirer from "inquirer";
-import { spawn } from "child_process";
-import path from "path";
-import process from "process";
+import { spawn } from "node:child_process";
+import path from "node:path";
+import process from "node:process";
 
+/**
+ * Resolve a Python command that works on your machine.
+ * On Windows with the Store Python, "python" is fine. Some setups need "py".
+ */
 function resolvePythonCmd() {
   const isWin = process.platform === "win32";
   return isWin ? "python" : "python3";
@@ -17,7 +20,6 @@ function resolvePythonCmd() {
  * @param {object} [opts.env] - extra env vars
  * @returns {Promise<{ code:number, stdout:string, stderr:string }>}
  */
-
 function runPython(imageTag, { scriptPath, filePath, env } = {}) {
   if (!imageTag) {
     throw new Error("imageTag is required");
@@ -50,10 +52,12 @@ function runPython(imageTag, { scriptPath, filePath, env } = {}) {
   });
 }
 
-async function callPythonScript(imageTag) {
+async function main() {
+  const imageTag = process.argv[2] ?? "demo_serve:02";
+
   const { code, stdout, stderr } = await runPython(imageTag, {
     env: {
-      DEPLOYMENT_ID: process.env.DEPLOYMENT_ID,
+      DEPLOYMENT_ID: process.env.DEPLOYMENT_ID ?? "d0ed15d3637c8205",
     },
   });
 
@@ -68,23 +72,7 @@ async function callPythonScript(imageTag) {
   }
 }
 
-
-
-export async function updateYaml() {
-  let dockerImageNames = ['aicore_deploy-tool:02', 'aicore-docker-deploy:04']; // called from db
-
-  const { selectedApi } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "selectedApi",
-      message: "Choose an endpoint:",
-      choices: [...dockerImageNames],
-    },
-  ]);
-
-  console.log(`\n🔄 Updating YAML with image: ${selectedApi}...\n`);
-  
-  await callPythonScript(selectedApi);
-}
-
-export { callPythonScript };
+main().catch((err) => {
+  console.error(err);
+  process.exitCode = 1;
+});

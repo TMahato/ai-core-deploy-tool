@@ -73,25 +73,23 @@ async def main():
             print(f"{'='*50}")
             print(updated_content)
             
-            confirm = input("\nDo you want to write these changes? (y/n): ").strip().lower()
             
-            if confirm == 'y':
-                try:
-                    write_call = await session.call_tool(
-                        name="write_file",
-                        arguments={
-                            "path": file_path,
-                            "content": updated_content
-                        }
-                    )
-                    
-                    print("\n File updated successfully!")
-                    
-                    for part in write_call.content:
-                        if hasattr(part, 'text'):
-                            print(f"Write result: {part.text}")
-                except Exception as e:
-                    print(f"Error writing file: {e}")
+            try:
+                write_call = await session.call_tool(
+                    name="write_file",
+                    arguments={
+                        "path": file_path,
+                        "content": updated_content
+                    }
+                )
+                
+                print("\n File updated successfully!")
+                
+                for part in write_call.content:
+                    if hasattr(part, 'text'):
+                        print(f"Write result: {part.text}")
+            except Exception as e:
+                print(f"Error writing file: {e}")
 
 if __name__ == "__main__":
     asyncio.run(main())

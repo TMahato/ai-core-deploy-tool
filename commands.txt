@@ -2,3 +2,22 @@ docker build -t docker.io/tanmay471/anamoly_train:01 .
 docker push docker.io/tanmay471/anamoly_train:01
 
 aicore configure -k "keys.json"
+
+###
+Get-ChildItem Env:AICORE* -> if this not empty
+run->Remove-Item Env:AICORE_AUTH_URL, Env:AICORE_CLIENT_ID, Env:AICORE_CLIENT_SECRET, Env:AICORE_RESOURCE_GROUP, Env:AICORE_BASE_URL
+
+alternate approach ->
+from dotenv import load_dotenv; load_dotenv(override=True)
+import os
+required = [
+  "AICORE_AUTH_URL",
+  "AICORE_CLIENT_ID",
+  "AICORE_CLIENT_SECRET",
+  "AICORE_BASE_URL",
+  "AICORE_RESOURCE_GROUP",
+]
+print("Env check:")
+for k in required:
+    print(k, "->", "OK" if os.getenv(k) else "MISSING")
+
