@@ -21,3 +21,5 @@ print("Env check:")
 for k in required:
     print(k, "->", "OK" if os.getenv(k) else "MISSING")
 
+
+https://hub.sap.com/api/AI_CORE_API/resource/Scenario

@@ -2,6 +2,7 @@ import inquirer from "inquirer";
 import { spawn } from "child_process";
 import path from "path";
 import process from "process";
+import { listAllDockerHubImages } from "./dockerhub-list.js"; 
 
 function resolvePythonCmd() {
   const isWin = process.platform === "win32";
@@ -71,7 +72,19 @@ async function callPythonScript(imageTag) {
 
 
 export async function updateYaml() {
-  let dockerImageNames = ['aicore_deploy-tool:02', 'aicore-docker-deploy:04']; // called from db
+  let dockerImageNames = [];
+  try {
+    dockerImageNames = await listAllDockerHubImages();
+  } catch (e) {
+    console.error("Failed to fetch images from Docker Hub:", e);
+    // Fallback (optional): keep a tiny default list so the tool still runs
+    dockerImageNames = ['aicore_deploy-tool:02', 'aicore-docker-deploy:04'];
+  }
+
+  if (dockerImageNames.length === 0) {
+    console.error("No images found for the given namespace.");
+    return;
+  }
 
   const { selectedApi } = await inquirer.prompt([
     {
